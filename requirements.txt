@@ -1,6 +1,6 @@
 Flask
 pandas
 gunicorn
-
+requests
 
 #.venv\Scripts\activate
