@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query on CSV</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2 style="color: white; font-weight: bold;">🗂️ Schema Overview</h2>
+
+            <ul class="table-list">
+                <li class="table-item">categories
+                    <ul class="column-list">
+                        <li>categoryID</li>
+                        <li>categoryName</li>
+                        <li>description</li>
+                        <li>picture</li>
+                    </ul>
+                </li>
+                <li class="table-item">customers
+                    <ul class="column-list">
+                        <li>customerID</li>
+                        <li>companyName</li>
+                        <li>contactName</li>
+                        <li>contactTitle</li>
+                        <li>address</li>
+                        <li>citty</li>
+                        <li>region</li>
+                        <li>postalCode</li>
+                        <li>country</li>
+                        <li>phone</li>
+                        <li>fax</li>
+                    </ul>
+                </li>
+                <li class="table-item">employee_territories
+                    <ul class="column-list">
+                        <li>employeeID</li>
+                        <li>territoryID</li>
+                    </ul>
+                </li>
+                <li class="table-item">employees
+                    <ul class="column-list">
+                        <li>employeeID</li>
+                        <li>lastName</li>
+                        <li>firstName</li>
+                        <li>title</li>
+                        <li>titleOfCourtesy</li>
+                        <li>birthDaate</li>
+                        <li>hireDate</li>
+                        <li>address</li>
+                        <li>city</li>
+                        <li>region</li>
+                        <li>postalCode</li>
+                        <li>country</li>
+                        <li>homePhone</li>
+                        <li>extension</li>
+                        <li>photo</li>
+                        <li>notes</li>
+                        <li>reportsTo</li>
+                        <li>photoPath</li>
+                    </ul>
+                </li>
+                <li class="table-item">order_details
+                    <ul class="column-list">
+                        <li>orderID</li>
+                        <li>productID</li>
+                        <li>unitPrice</li>
+                        <li>quantity</li>
+                        <li>discount</li>
+                    </ul>
+                </li>
+                <li class="table-item">orders
+                    <ul class="column-list">
+                        <li>orderID</li>
+                        <li>customerID</li>
+                        <li>employeeID</li>
+                        <li>orderDate</li>
+                        <li>requiredDate</li>
+                        <li>shippeedDate</li>
+                        <li>shipVia</li>
+                        <li>freight</li>
+                        <li>shipName</li>
+                        <li>shipAddress</li>
+                        <li>shipCity</li>
+                        <li>shipRegion</li>
+                        <li>shipPostalCode</li>
+                        <li>shipCountry</li>
+                    </ul>
+                </li>
+                <li class="table-item">products
+                    <ul class="column-list">
+                        <li>productID</li>
+                        <li>productName</li>
+                        <li>supplierID</li>
+                        <li>categoryID</li>
+                        <li>quantityPerUnit</li>
+                        <li>unitPrice</li>
+                        <li>unitsInStock</li>
+                        <li>unitsOnOrder</li>
+                        <li>reorderLevel</li>
+                        <li>discontinued</li>
+                    </ul>
+                </li>
+                <li class="table-item">regions
+                    <ul class="column-list">
+                        <li>regionID</li>
+                        <li>regionDescription</li>
+                    </ul>
+                </li>
+                <li class="table-item">shippers
+                    <ul class="column-list">
+                        <li>shipperID</li>
+                        <li>companyName</li>
+                        <li>phone</li>
+                    </ul>
+                </li>
+                <li class="table-item">suppliers
+                    <ul class="column-list">
+                        <li>supplierID</li>
+                        <li>companyName</li>
+                        <li>contactName</li>
+                        <li>contactTitle</li>
+                        <li>address</li>
+                        <li>citty</li>
+                        <li>region</li>
+                        <li>postalCode</li>
+                        <li>country</li>
+                        <li>phone</li>
+                        <li>fax</li>
+                        <li>homePage</li>
+                    </ul>
+                </li>
+                <li class="table-item">territories
+                    <ul class="column-list">
+                        <li>territoryID</li>
+                        <li>territoryDescription</li>
+                        <li>regionID</li>
+                    </ul>
+                </li>
+            </ul> 
+            <button onclick="window.location.replace('{{ url_for('index') }}')" class="back-button">🔙 Go Back</button>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 style="color: #EAEAEA; font-weight: bold; font-size: 42px; text-align: center;">SQL Query on CSV</h1>
+
+
+            
+            <form method="POST" action="/query">
+                <label for="query" style="color: #EAEAEA; font-size: 28px; font-weight: bold;">Enter SQL Query:</label>
+
+                <textarea id="query" name="query" rows="6" required placeholder="e.g., SELECT * FROM customers;">{{ selected_query or '' }}</textarea>
+                <button type="submit">Run Query</button>
+            </form>
+
+            {% if error %}
+            <p class="error">⚠️ {{ error }}</p>
+            {% endif %}
+
+            {% if headers and data %}
+            <h2 style="color: #EAEAEA; font-size: 28px; font-weight: bold;">Query Results:</h2>
+
+            <div class="output-box">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for header in headers %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            {% for value in row %}
+                            <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        
+
+    </div>
+    
+</body>
+</html>
