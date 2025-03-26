@@ -17,6 +17,6 @@ SCHEMASPHERE transforms your **CSV files into queryable databases**—no setup, 
 3️⃣ **Get instant results** – Structured output, just like a real database.  
 
 ### 🌍 Live Demo  
-🔗 **[Try it out here!](https://your-live-demo-link.com)**   
+🔗 **[Try it out here!](https://schemasphere.onrender.com/)**   
 
 SCHEMASPHERE makes data querying effortless—because who needs complicated database setups anyway? 😎💡
