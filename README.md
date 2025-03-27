@@ -1,6 +1,9 @@
 # **SCHEMASPHERE 🌍💾**  
 ### *A SQL Playground for Your CSV Files!*  
 
+### 🌍 **Live Demo**  
+🔗 ** https://schemasphere.onrender.com
+
 ## 🚀 **About the Project**  
 SCHEMASPHERE transforms your **CSV files into queryable databases**—no setup, no hassle! Just add a CSV file, write SQL queries, and get structured results instantly. Whether you're a **data enthusiast, analyst, or just SQL-curious**, this tool makes exploring CSV data a breeze.  
 
@@ -20,8 +23,7 @@ SCHEMASPHERE transforms your **CSV files into queryable databases**—no setup, 
 2️⃣ **Write SQL queries** – Use standard SQL syntax to explore your data.  
 3️⃣ **Get instant results** – Structured output, just like a real database.  
 
-### 🌍 **Live Demo**  
-🔗 **[Try it out here](#)** *(Replace with actual link when deployed!)*  
+
 
 SCHEMASPHERE makes data querying effortless—because who needs complicated database setups anyway? 😎💡  
 
