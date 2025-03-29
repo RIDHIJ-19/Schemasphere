@@ -6,6 +6,9 @@ import requests
 import io
 import logging
 import time  # Import time module
+from io import BytesIO
+import gzip
+
 
 app = Flask(__name__)  # Initialize Flask app
 
@@ -23,21 +26,24 @@ CSV_FILES = {
     "regions": "https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/northwind/data/csv/regions.csv",
     "shippers": "https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/northwind/data/csv/shippers.csv",
     "suppliers": "https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/northwind/data/csv/suppliers.csv",
-    "territories": "https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/northwind/data/csv/territories.csv"
+    "territories": "https://raw.githubusercontent.com/graphql-compose/graphql-compose-examples/master/examples/northwind/data/csv/territories.csv",
+    "large": "https://raw.githubusercontent.com/RIDHIJ-19/Schemasphere/main/large.csv"
 }
 
+
 def get_table_name(query):
-    """Extract table name from SQL query."""
-    match = re.search(r'FROM\s+([a-zA-Z_]+)', query, re.IGNORECASE)
+    """Extract table name from SQL query, handling quotes."""
+    match = re.search(r'FROM\s+[\'"]?([a-zA-Z_]+)[\'"]?', query, re.IGNORECASE)
     if match:
         table_name = match.group(1).strip().lower()  # Normalize to lowercase
         logging.debug(f"🟢 Extracted Table Name: {table_name}")
-        logging.debug(f"📌 Available Tables: {list(CSV_FILES.keys())}")
         return table_name if table_name in CSV_FILES else None
     return None
 
+ 
+
 def load_csv_to_sqlite(table_name):
-    """Load CSV into an SQLite database in memory."""
+    """Load large CSV files into an SQLite database in memory."""
     table_name = table_name.lower()
     csv_url = CSV_FILES.get(table_name)
 
@@ -47,13 +53,24 @@ def load_csv_to_sqlite(table_name):
 
     try:
         logging.info(f"🔗 Downloading CSV from: {csv_url}")
-        response = requests.get(csv_url)
-        df = pd.read_csv(io.StringIO(response.text))
+        response = requests.get(csv_url, stream=True)
+        response.raise_for_status()
+
+        # Handle GZIP compression
+        try:
+            with gzip.GzipFile(fileobj=BytesIO(response.content), mode="rb") as gz_file:
+                csv_data = gz_file.read().decode("utf-8")
+        except gzip.BadGzipFile:
+            logging.warning("⚠️ File is not GZIP compressed. Trying normal read.")
+            csv_data = response.content.decode("utf-8", errors="replace")
 
         conn = sqlite3.connect(":memory:")
+        df = pd.read_csv(BytesIO(csv_data.encode()))
+        
+        df.columns = df.columns.str.lower().str.replace(" ", "_")  # Normalize column names
         df.to_sql(table_name, conn, index=False, if_exists="replace")
 
-        logging.info(f"✅ Successfully loaded CSV for `{table_name}`, rows: {df.shape[0]}")
+        logging.info(f"✅ Successfully loaded `{table_name}` into SQLite")
         return conn
     except Exception as e:
         logging.error(f"❌ Error loading CSV: {e}")
