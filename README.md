@@ -88,4 +88,4 @@
 
 Want to dive into structured data without setting up a full database? **SCHEMASPHERE** is your SQL playground.
 
-📉 **Built with ❤️ for data lovers!**
+ 
