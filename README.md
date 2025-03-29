@@ -58,15 +58,12 @@
 ## ⚡ Performance & Optimizations
 
 ### 🕒 **Measuring Execution Time**
-- time.time() records the current time in seconds. To measure execution time, the start time is captured before executing a task, and the
--  end time is recorded after the task completes. The difference between these two values gives the total execution duration. This method helps assess
--   performance and identify bottlenecks in code execution.
+- time.time() records the current time in seconds. To measure execution time, the start time is captured before executing a task, and the end time is recorded after the task completes. The difference between these two values gives the total execution duration. This method helps assess   performance and identify bottlenecks in code execution.
  
 
 ### 🚀 **Optimizations for Large CSV Files**
-- **Streaming Data Loading:** Chunk processing allows handling large CSV files efficiently by loading them in smaller portions
--  instead of reading the entire file at once. Pandas provides a chunksize parameter that divides the file into manageable DataFrame segments.
--   Each chunk is processed independently, reducing memory consumption and improving performance, especially for large datasets
+- **Streaming Data Loading:** Chunk processing allows handling large CSV files efficiently by loading them in smaller portions instead of reading the entire file at once. Pandas provides a chunksize parameter that divides the file into manageable DataFrame segments.
+- Each chunk is processed independently, reducing memory consumption and improving performance, especially for large datasets
  
 
 ---
